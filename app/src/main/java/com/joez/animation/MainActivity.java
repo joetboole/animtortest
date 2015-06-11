@@ -1,6 +1,7 @@
 package com.joez.animation;
 
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -63,7 +64,8 @@ public class MainActivity extends ActionBarActivity {
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.btn_trans:
-				transLeftToRight(mIvTarget);
+//				transLeftToRight(mIvTarget);
+                valueAnimatorTest();
 				break;
 			case R.id.btn_rota:
 				rotation(mIvTarget);
@@ -72,8 +74,10 @@ public class MainActivity extends ActionBarActivity {
 				alphChange(mIvTarget);
 				break;
 			case R.id.btn_scale:
+                scaleView(mIvTarget);
 				break;
 			case R.id.btn_mix:
+                mixAnimator(mIvTarget);
 				break;
 			default:
 				break;
@@ -90,14 +94,39 @@ public class MainActivity extends ActionBarActivity {
 		private void rotation(View view){
 			ObjectAnimator animator=ObjectAnimator.ofFloat(view, "rotation", 0,360);
 			animator.setInterpolator(new CycleInterpolator(100));
-			animator.setDuration(30000).start();;
+			animator.setDuration(30000).start();
 		}
 		
 		private void alphChange(View view){
-			ObjectAnimator animator=ObjectAnimator.ofFloat(view, "alpha", 1,0,1);
-			animator.setInterpolator(new LinearInterpolator());
-			animator.setDuration(10000).start();
+		    ObjectAnimator animator = ObjectAnimator.ofFloat(view,"alpha",1,0,1);
+            animator.setInterpolator(new LinearInterpolator());
+            animator.setDuration(3000).start();
 		}
-	}
 
+        private void scaleView(View view){
+            PropertyValuesHolder valueHolder = PropertyValuesHolder.ofFloat("scaleX",1,2,1);
+            PropertyValuesHolder valuesYHolder = PropertyValuesHolder.ofFloat("scaleY",1,2,1);
+            ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(view,valueHolder,valuesYHolder);
+            animator.setDuration(2000).start();
+        }
+
+        private void mixAnimator(View view){
+            int left = view.getLeft();
+            int top = view.getTop();
+            PropertyValuesHolder valuesXHolder = PropertyValuesHolder.ofFloat("scaleX",1,2,1);
+            PropertyValuesHolder valuesYHolder = PropertyValuesHolder.ofFloat("scaleY",1,2,1);
+            PropertyValuesHolder transXHolder = PropertyValuesHolder.ofFloat("translationX",0,mScreenWidth/2-left/2,0);
+            PropertyValuesHolder transYHolder = PropertyValuesHolder.ofFloat("translationY",0,mScreenHeight/2-top/2,0);
+
+            ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(view,valuesXHolder,valuesYHolder,transXHolder,transYHolder);
+            animator.setDuration(5000);
+            animator.setInterpolator(new LinearInterpolator());
+            animator.start();
+        }
+
+        private void valueAnimatorTest(View view){
+
+        }
+
+	}
 }
